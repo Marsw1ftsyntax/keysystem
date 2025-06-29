@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Key System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .key-list {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste do Key System</h1>
+    
+    <div class="test-section">
+        <h2>📋 Keys de Teste Disponíveis</h2>
+        <div class="key-list">
+            <div>KEY-2024-ABC123-XYZ789</div>
+            <div>KEY-2024-DEF456-UVW012</div>
+            <div>KEY-2024-GHI789-RST345</div>
+            <div>KEY-2024-JKL012-MNO678</div>
+            <div>KEY-2024-PQR345-TUV901</div>
+        </div>
+        <p class="info">Use estas keys para testar o sistema.</p>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Teste Manual</h2>
+        <input type="text" id="testKey" placeholder="Cole uma key aqui...">
+        <button onclick="testKey()">Testar Key</button>
+        <div id="testResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>⚙️ Status do Sistema</h2>
+        <div id="systemStatus"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Funções de Debug</h2>
+        <button onclick="showAllKeys()">Mostrar Todas as Keys</button>
+        <button onclick="testObfuscation()">Testar Ofuscação</button>
+        <button onclick="clearLogs()">Limpar Logs</button>
+        <div id="debugOutput"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Logs do Sistema</h2>
+        <div id="logs" style="background: #000; color: #0f0; padding: 10px; border-radius: 5px; font-family: monospace; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+
+    <script src="keys.js"></script>
+    <script>
+        // Função para adicionar logs
+        function addLog(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.className = type;
+            logs.appendChild(logEntry);
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        // Testar uma key
+        function testKey() {
+            const key = document.getElementById('testKey').value.trim();
+            const result = document.getElementById('testResult');
+            
+            if (!key) {
+                result.innerHTML = '<span class="error">Por favor, insira uma key.</span>';
+                return;
+            }
+
+            addLog(`Testando key: ${key}`);
+            
+            if (window.KeySystem && window.KeySystem.isValidKey(key)) {
+                result.innerHTML = '<span class="success">✅ Key válida!</span>';
+                addLog('Key válida detectada', 'success');
+            } else {
+                result.innerHTML = '<span class="error">❌ Key inválida!</span>';
+                addLog('Key inválida detectada', 'error');
+            }
+        }
+
+        // Mostrar todas as keys (desofuscadas)
+        function showAllKeys() {
+            const output = document.getElementById('debugOutput');
+            if (!window.KeySystem) {
+                output.innerHTML = '<span class="error">Sistema de keys não carregado!</span>';
+                return;
+            }
+
+            let keysList = '<h3>Keys Disponíveis:</h3><div class="key-list">';
+            window.KeySystem.validKeys.forEach((obfuscatedKey, index) => {
+                try {
+                    const deobfuscatedKey = atob(obfuscatedKey.split('').reverse().join(''));
+                    keysList += `<div>${index + 1}. ${deobfuscatedKey}</div>`;
+                } catch (error) {
+                    keysList += `<div>${index + 1}. [Erro ao desofuscar]</div>`;
+                }
+            });
+            keysList += '</div>';
+            
+            output.innerHTML = keysList;
+            addLog('Todas as keys mostradas', 'info');
+        }
+
+        // Testar ofuscação
+        function testObfuscation() {
+            const output = document.getElementById('debugOutput');
+            const testKey = 'TEST-KEY-123';
+            
+            // Simular ofuscação
+            const obfuscated = btoa(testKey.split('').reverse().join(''));
+            const deobfuscated = atob(obfuscated).split('').reverse().join('');
+            
+            output.innerHTML = `
+                <h3>Teste de Ofuscação:</h3>
+                <div class="key-list">
+                    <div>Original: ${testKey}</div>
+                    <div>Ofuscada: ${obfuscated}</div>
+                    <div>Desofuscada: ${deobfuscated}</div>
+                    <div>Resultado: ${testKey === deobfuscated ? '✅ Sucesso' : '❌ Falha'}</div>
+                </div>
+            `;
+            
+            addLog('Teste de ofuscação executado', 'info');
+        }
+
+        // Limpar logs
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '';
+            document.getElementById('debugOutput').innerHTML = '';
+            addLog('Logs limpos', 'info');
+        }
+
+        // Verificar status do sistema
+        function checkSystemStatus() {
+            const status = document.getElementById('systemStatus');
+            
+            if (window.KeySystem) {
+                status.innerHTML = `
+                    <span class="success">✅ Sistema carregado com sucesso!</span><br>
+                    <span class="info">Keys disponíveis: ${window.KeySystem.validKeys.length}</span><br>
+                    <span class="info">Funções disponíveis: ${Object.keys(window.KeySystem).join(', ')}</span>
+                `;
+                addLog('Sistema carregado com sucesso', 'success');
+            } else {
+                status.innerHTML = '<span class="error">❌ Sistema não carregado!</span>';
+                addLog('Sistema não carregado', 'error');
+            }
+        }
+
+        // Inicializar quando a página carregar
+        window.addEventListener('load', () => {
+            addLog('Página de teste carregada', 'info');
+            checkSystemStatus();
+            
+            // Teste automático com uma key válida
+            setTimeout(() => {
+                if (window.KeySystem) {
+                    const testKey = 'KEY-2024-ABC123-XYZ789';
+                    const isValid = window.KeySystem.isValidKey(testKey);
+                    addLog(`Teste automático: ${testKey} - ${isValid ? 'Válida' : 'Inválida'}`, isValid ? 'success' : 'error');
+                }
+            }, 1000);
+        });
+
+        // Permitir testar com Enter
+        document.getElementById('testKey').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                testKey();
+            }
+        });
+    </script>
+</body>
+</html> 

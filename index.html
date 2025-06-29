@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key System - Verificação</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <i class="fas fa-key header-icon"></i>
+                <h1>Key System</h1>
+                <p>Verifique sua chave de acesso</p>
+            </div>
+            
+            <div class="form-container">
+                <div class="input-group">
+                    <label for="keyInput">
+                        <i class="fas fa-key"></i>
+                        Chave de Acesso
+                    </label>
+                    <input 
+                        type="text" 
+                        id="keyInput" 
+                        placeholder="Cole sua chave aqui..."
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <button id="verifyBtn" class="verify-btn">
+                    <i class="fas fa-check"></i>
+                    Verificar Chave
+                </button>
+            </div>
+            
+            <div id="resultContainer" class="result-container hidden">
+                <div id="successResult" class="result success hidden">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Chave Válida!</h3>
+                    <p>Sua chave foi verificada com sucesso.</p>
+                    <button id="copyScriptBtn" class="copy-btn">
+                        <i class="fas fa-copy"></i>
+                        Copiar Script
+                    </button>
+                </div>
+                
+                <div id="errorResult" class="result error hidden">
+                    <i class="fas fa-times-circle"></i>
+                    <h3>Chave Inválida</h3>
+                    <p id="errorMessage">A chave fornecida não é válida.</p>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-info-circle"></i> Como usar:</h3>
+                <ol>
+                    <li>Cole sua chave no campo acima</li>
+                    <li>Clique em "Verificar Chave"</li>
+                    <li>Se válida, copie o script para usar no Roblox</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+    
+    <script src="keys.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
